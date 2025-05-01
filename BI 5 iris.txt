@@ -1,0 +1,43 @@
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import confusion_matrix
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Rename columns to standard names
+dataset.columns = ['SepalLengthCm', 'SepalWidthCm', 'PetalLengthCm', 'PetalWidthCm', 'Species']
+
+# Prepare data
+X = dataset[['SepalLengthCm', 'SepalWidthCm', 'PetalLengthCm', 'PetalWidthCm']]
+y = dataset['Species']
+
+# Train/test split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+
+# Model training
+clf = DecisionTreeClassifier()
+clf.fit(X_train, y_train)
+
+# Prediction
+y_pred = clf.predict(X_test)
+
+# Confusion matrix
+cm = confusion_matrix(y_test, y_pred)
+labels = clf.classes_
+
+# Plot confusion matrix using matplotlib
+fig, ax = plt.subplots()
+cax = ax.matshow(cm, cmap=plt.cm.Blues)
+plt.title("Confusion Matrix")
+fig.colorbar(cax)
+ax.set_xticklabels([''] + list(labels))
+ax.set_yticklabels([''] + list(labels))
+plt.xlabel('Predicted')
+plt.ylabel('Actual')
+
+# Add text labels
+for (i, j), val in np.ndenumerate(cm):
+    ax.text(j, i, f"{val}", ha='center', va='center', color='black')
+
+plt.tight_layout()
+plt.show()
